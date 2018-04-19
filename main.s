@@ -7,25 +7,6 @@
     20/04/2018
  */
 
-.data
-.align 2
-//se definen las variables a usar
-N:
-.word   10
-formato:
-    .asciz "Su nombre en mayusculas (10 caracteres maximo): %s\n"
-entrada:
-    .asciz "%s"
-ingreso_dato:
-    .asciz "\nIngrese su nombre: "
-mal:
-    .asciz "Ha ingresado mal algun caracter. Solo se puede del abecedario."
-valor:
-    .asciz " "
-arreglo:
-    .asciz "          "
-arreglosalida:
-    .asciz "          "
 
 
 //Empieza el encabezado
@@ -61,27 +42,6 @@ ingreso: /* ingreso de nombre */
     mov r0, #1
     mov r7,#0
 
-
-uppercase:   /* ciclo para cambiar los valores del arreglo y guardarlos en uno nuevo */
-    ldrb r10,[r5,#1]! @@carga en r10 el valor actual del arreglo
-
-    /* programacion defensiva */
-    cmp r10, #65
-    cmpge r10, #90
-    cmpgt r10, #97
-    blt mal_ingreso
-    cmp r10, #123
-    bgt mal_ingreso
-
-    /* cambio a mayusculas y store del nuevo valor en el arreglo de salida */
-    and r10, #0b11011111
-    ldr r9,[r8,#1]! //carga en r9 el valor actual del arreglo de salida
-    str r10, [r8]
-    mov r9,r10//movemos el valor
-    add r7,r7,#1 //testamos
-    cmp r6,r7//testeamos el valor
-    bne uppercase
-
 print:  /* se imprime todo el arreglo */
     ldr r0,=formato//asiganmos el formato
     ldr r1, =arreglosalida
@@ -102,4 +62,28 @@ mal_ingreso:
     b ingreso
 
 
-
+.data
+.align 2
+//se definen las variables a usar
+N:
+    .word   10
+welcome1:
+    .asciz "******* JUGADOR 1  **************"
+entrada:
+    .asciz "%s"
+ingreso_dato:
+    .asciz "\nPalabra: %s \nIngrese la vocal: "
+mal:
+    .asciz "Ha ingresado mal algun caracter. Solo se puede del abecedario."
+valor:
+    .asciz " "
+arreglo:
+    .asciz "          "
+arreglosalida:
+    .asciz "          "
+ptos1: //puntos del jugador 1
+    .word 0
+ptos2:  //puntos del jugador 2
+    .word 0
+welcome2:
+    .asciz "******* JUGADOR 2  **************"
