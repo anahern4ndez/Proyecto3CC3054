@@ -23,7 +23,7 @@ N:
 welcome1:
     .asciz "******* JUGADOR 1  **************"
 entrada:
-    .asciz "%c"
+    .asciz " %c"
 ingreso_dato:
     .asciz "\nPalabra: %s \nIngrese la vocal: "
 mal:
@@ -60,7 +60,6 @@ main:
     mov r11, #0
 
     //Links a subrutinas
-
     bl ingreso
 
     //salida a SO
@@ -81,11 +80,9 @@ ingreso: /* ingreso de nombre */
     sub r5, #1
     add r5, r2
 
-    push {lr}
     ldr r0,=ingreso_dato
     mov r1, r5
     bl printf
-    pop {lr}
 
     @ ingreso de datos
     @ r0 contiene formato de ingreso
@@ -95,9 +92,9 @@ ingreso: /* ingreso de nombre */
     bl scanf//leemos
 
     ldr r7,=vocal
-    ldrb r1, [r7]
+    ldrb r4, [r7]
     mov r2, r10
-    bl getchar
+    bl getchar //eliminar del buffer
     bl encontrar_palabra
 
     mov pc, lr //regreso al main
@@ -107,11 +104,10 @@ encontrar_palabra:
     ldr r0,=letras
     sub r0, #1
     add r0, #10
-//    mov r1, r0
-    cmp r0, r1
+    ldrb r9, [r0]
+    cmp r4, r9
     blne pierde
     bleq gana
-
     pop {lr}
 
 
@@ -122,24 +118,23 @@ pierde: //el jugador ingreso mal la letra
     ldr r1,=ptos1
     bl printf
     pop {lr}
-    mov pc, lr
-gana:   //el jugador ingreso bien la palabra
+    b ingreso
 
+gana:   //el jugador ingreso bien la palabra
     mov r0, #0
     cmp r11, #0
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-    moveq r11, #1
-    ldr r0, [r0]
-    add r0, #1
-//    str r0, [r0]
+    moveq r11, #1    //si esta jugando el jugador 1, que cambie
+    movne r11, #0 //si esta jugando el jugador 2, que cambie
+    ldrb r0, [r0]
+    add r1, r0, #1
+//    strb r1, [r0]  // esto hay que arreglarlo porque tira un segmentation fault
     mov r1, r0
- //   ldr r0,=correcto
-   // bl printf
-    ldr r0,=welcome2
-    bl puts
-    mov pc, lr
-
+    ldr r0,=correcto
+    bl printf
+    pop {lr}
+    b ingreso
 
 
 
