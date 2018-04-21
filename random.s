@@ -13,6 +13,8 @@
 * output of the next number in a pseduo random number sequence.
 * C++ Signature: u32 Random(u32 lastValue);
 */
+.text
+.align 2
 .global random
 random:
 	xnm .req r0

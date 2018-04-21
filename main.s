@@ -12,6 +12,7 @@
     R5: contiene direccion a indice en el arreglo de palabras
     R6: contiene direccion a indice en el arreglo de vocales
     R7: letra que se ingresó
+    R9: numero random generado
  **/
 
 .data
@@ -44,6 +45,8 @@ letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 palabra:
     .asciz "     "
+vocal:
+    .asciz " "
 
 
 //Empieza el programa
@@ -57,11 +60,16 @@ palabra:
 main:
     stmfd sp!,{lr}
     mov r11, #0
+    ldr r0,=welcome1
+    bl puts
 
     //Links a subrutinas
     bl random
-    mov r0, r1 //el random que se genero usarlo para ver qué palabra toca
-    mov r1, r6
+    ldr r0,=welcome1
+    bl puts
+
+    mov r9, r1 //el random que se genero usarlo para ver qué palabra toca
+    mov r6, r1
     bl ingreso
 
     //salida a SO
@@ -72,63 +80,95 @@ main:
 
 /* Inicio de subrutinas */
 ingreso: /* ingreso de nombre */
+
     mov r5, #0
     ldr r5,=banco //carga la primera posicion del banco de palabras
     mov r1, #5
-    mul r0, r1
+    mul r9, r1
     adds r5, r0 //redirecciona a la posicion de la primera letra de la palabra
-    mov r0, #0
+    mov r9, #0
     ldrb r2,=palabra
     sub r1, #1
     sub r2, #1
-    push {lr}
+    mov r1, r5
     bl cargar_palabra
 
-    push {lr}
     ldr r0,=ingreso_dato
     ldr r1,=palabra
     bl printf
 
-    push {lr}
-    ldr r0,=entrada
-    ldr r1,r7
-    bl scanf//leemos
-
-
     @ ingreso de datos
     @ r0 contiene formato de ingreso
-    @ r1 contiene direccion donde almacena dato leido
+    @ r7 contiene la direccion a la vocal que ingreso
     ldr r0,=entrada
-    ldr r1,=arreglo
+    ldr r1,=vocal
     bl scanf//leemos
+
+    ldr r7,=vocal
+    bl encontrar_palabra
 
     mov r0, #1
     mov r7,#0
     mov pc, lr //regreso al main
 
-print:  /* se imprime todo el arreglo */
-    ldr r0,=formato//asiganmos el formato
-    ldr r1, =arreglosalida
-    bl printf//imprimimos
-
-mal_ingreso:
-    cmp r10, #0
-    beq print
-    ldr r0,=mal /* mensaje de error*/
-    bl puts
-    bl getchar @para que borre la informacion del buffer de teclado
-    b ingreso
-
 cargar_palabra:
-    ldrb r1, [r5, #1]!
+ //   push {lr}
+    ldrb r0, [r1, #1]!
     ldr r3, [r2, #1]!
-    str r1, [r2]
-    mov r3, r1
+    str r0, [r2]
+    mov r3, r0
     add r0, #1
     cmp r0, #5
     bne cargar_palabra
-    pop{lr}
+    pop {lr}
 
+encontrar_palabra:
+    push {lr}
+    ldr r5,=banco
+    add r5, r6
+    cmp r5, r7
+    pop {lr}
+/**
+    bne pierde
+    beq gana
+
+//pierde: //el jugador ingreso mal la letra
+    //aqui hace el print del mensaje que perdio
+   // pop {lr}
+
+//gana:   //el jugador ingreso bien la palabra
+/**
+    mov r0, #0
+    cmp r11, #0
+    ldreq r0,=ptos1
+    ldrne r0,=ptos2
+    add r0, #1
+    pop {lr}
+**/
+random:
+	xnm .req r0
+	a .req r1
+
+	mov a,#0xef00
+	mul a,xnm
+	add a,xnm
+	lsr	a,#3
+	add a,#924
+	mul a,xnm
+	sub a,xnm
+	mul a,xnm
+	add a,xnm
+
+    cmp a, #0
+    blt random
+    cmpgt a, #39
+    bgt random
+
+	.unreq xnm
+	add r0,a,#73
+
+	.unreq a
+	pop {lr}
 
 
 
