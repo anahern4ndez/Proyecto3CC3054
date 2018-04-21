@@ -1,5 +1,3 @@
-﻿
-
 /*
  Organizacion de Computadoras y Assembler
     Ana Lucia Hernandez 17138
@@ -17,7 +15,7 @@
 
 .data
 .align 2
-//se definen las variables a usar
+@@se definen las variables a usar
 N:
     .word   10
 welcome1:
@@ -29,9 +27,9 @@ ingreso_dato:
 mal:
     .asciz "Ha ingresado mal algun caracter. Solo se puede del abecedario."
 
-ptos1: //puntos del jugador 1
+ptos1: @@puntos del jugador 1
     .word 0
-ptos2:  //puntos del jugador 2
+ptos2:  @@puntos del jugador 2
     .word 0
 welcome2:
     .asciz "******* JUGADOR 2  **************"
@@ -47,9 +45,11 @@ palabra:
     .asciz "     "
 vocal:
     .asciz " "
+mensaje:
+	.asciz "El error comienza en ingreso es lo que sigue"
 
 
-//Empieza el programa
+@@Empieza el programa
 .text
 .align 2
 
@@ -63,20 +63,15 @@ main:
     ldr r0,=welcome1
     bl puts
 ciclo:
-    //Links a subrutinas
-    bl random
-    cmp r0,#0
-    blt main
-    cmp r0,#40
-    bgt ciclo
-    ldr r0,=welcome1
-    bl puts
+    @@Links a subrutinas
 
-    mov r9, r1 //el random que se genero usarlo para ver qué palabra toca
+    mov r9, #3  @@el random que se genero usarlo para ver qué palabra toca
     mov r6, r1
+    ldr r0,=mensaje
+    bl puts
     bl ingreso
 
-    //salida a SO
+    @@salida a so
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
@@ -86,15 +81,17 @@ ciclo:
 ingreso: /* ingreso de nombre */
 
     mov r5, #0
-    ldr r5,=banco //carga la primera posicion del banco de palabras
+    ldr r5,=banco @@carga la primera posicion del banco de palabras
     mov r1, #5
     mul r9, r1
-    adds r5, r0 //redirecciona a la posicion de la primera letra de la palabra
+    adds r5, r0 @@redirecciona a la posicion de la primera letra de la palabra
     mov r9, #0
     ldrb r2,=palabra
     sub r1, #1
     sub r2, #1
     mov r1, r5
+    ldr r0,=mensaje
+    bl puts
     bl cargar_palabra
 
     ldr r0,=ingreso_dato
@@ -106,23 +103,32 @@ ingreso: /* ingreso de nombre */
     @ r7 contiene la direccion a la vocal que ingreso
     ldr r0,=entrada
     ldr r1,=vocal
-    bl scanf//leemos
+    bl scanf	@@leemos
 
     ldr r7,=vocal
     bl encontrar_palabra
 
     mov r0, #1
     mov r7,#0
-    mov pc, lr //regreso al main
+    mov pc, lr @@regreso al main
 
 cargar_palabra:
- //   push {lr}
-    ldrb r0, [r1, #1]!
+   push {lr}
+   ldr r0,=mensaje
+   bl puts
+   @@el segmentation fault esta en esta parte del codigo
+    ldrb r0, [r5,#1]!
+    ldr r0,=mensaje
+    bl puts
     ldr r3, [r2, #1]!
+    ldr r0,=mensaje
+    bl puts
     str r0, [r2]
+    ldr r0,=ingreso_dato
+    bl puts
     mov r3, r0
     add r0, #1
-    cmp r0, #5
+    cmp r0, #0
     bne cargar_palabra
     pop {lr}
 
@@ -131,7 +137,12 @@ encontrar_palabra:
     ldr r5,=banco
     add r5, r6
     cmp r5, r7
+    b fin
     pop {lr}
+fin:
+    ldr r0,=error
+    bl puts
+   pop {lr}
 /**
     bne pierde
     beq gana
