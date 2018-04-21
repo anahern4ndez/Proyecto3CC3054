@@ -70,7 +70,9 @@ main:
 
 /* Inicio de subrutinas */
 ingreso: /* ingreso de nombre */
-    ldr r0,=welcome1
+    cmp r11, #0
+    ldreq r0,=welcome1
+    ldrne r0,=welcome2
     bl puts
 
     mov r10, #10 //prueba
@@ -112,10 +114,12 @@ encontrar_palabra:
 
 
 pierde: //el jugador ingreso mal la letra
-    ldr r0,=welcome1
-    bl puts
+    cmp r11, #0
+    ldreq r1,=ptos1
+    ldrne r1,=ptos2
+    moveq r11, #1    //si esta jugando el jugador 1, que cambie
+    movne r11, #0 //si esta jugando el jugador 2, que cambie
     ldr r0,=error
-    ldr r1,=ptos1
     bl printf
     pop {lr}
     b ingreso
