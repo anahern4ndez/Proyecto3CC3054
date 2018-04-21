@@ -48,5 +48,4 @@ cargar_palabra:
         ldr r0,=formato
         bl printf
 	pop {lr}
-	mov pc,lr
 
