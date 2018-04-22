@@ -1,4 +1,4 @@
-﻿/*
+/*
  Organizacion de Computadoras y Assembler
     Ana Lucia Hernandez 17138
     María Fernanda López 17160
@@ -73,7 +73,6 @@ main:
     bl ingreso
 
     /* salida a SO */
-    pop {lr}
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
@@ -119,7 +118,7 @@ ingreso: /* ingreso de nombre */
     bl getchar @@eliminar del buffer
     push {lr}
     bl encontrar_palabra
-
+    pop {lr}
     mov pc, lr @@regreso al main
 
 
@@ -130,7 +129,6 @@ encontrar_palabra:
     cmp r4, r9
     blne pierde
     bleq gana
-    pop {lr}
     mov pc, lr
 
 
