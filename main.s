@@ -150,7 +150,6 @@ pierde: @el jugador ingreso mal la letra
     pop {lr}
     bne ingreso @@mientras no sea 0, que siga jugando
     mov pc, lr  @@ si el contador es 0, que se termine el programa
-    strb r1, [r0]  @@ puntos <- puntos -2
 
 gana:   @el jugador ingreso bien la palabra
     mov r0, #0
