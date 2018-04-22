@@ -13,13 +13,12 @@
     R6: contiene direccion a indice en el arreglo de vocales
     R7: letra que se ingresó
     R9: numero random generado
+    R8: lleva las veces que cada jugador ha jugado (como son 2 y son 10 palabras, comienza con 20)
  **/
 
 .data
 .align 2
 //se definen las variables a usar
-N:
-    .word   10
 welcome1:
     .asciz "******* JUGADOR 1  **************"
 entrada:
@@ -44,7 +43,7 @@ banco:
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
-    .asciz " "
+    .asciz "a"
 
 
 //Empieza el programa
@@ -58,11 +57,18 @@ vocal:
 main:
     stmfd sp!,{lr}
     mov r11, #0
+    mov r8, #5
+    ldr r0,=ptos1
+    ldr r2,=ptos2
+    str r11, [r0]
+    str r11, [r2]
+    mov r2, #0
+    mov r0, #0
 
     //Links a subrutinas
     bl ingreso
-
     //salida a SO
+    pop {lr}
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
@@ -115,14 +121,21 @@ encontrar_palabra:
 
 pierde: //el jugador ingreso mal la letra
     cmp r11, #0
-    ldreq r1,=ptos1
-    ldrne r1,=ptos2
+    ldreq r0,=ptos1
+    ldrne r0,=ptos2
     moveq r11, #1    //si esta jugando el jugador 1, que cambie
     movne r11, #0 //si esta jugando el jugador 2, que cambie
+    ldr r1, [r0]
+    cmp r1, #1
+    subgt r1, #2
+    movle r1, #0
+    strb r1, [r0]  // puntos <- puntos -2
     ldr r0,=error
     bl printf
+    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
-    b ingreso
+    bne ingreso //mientras no sea 0, que siga jugando
+    mov pc, lr // si el contador es 0, que se termine el programa
 
 gana:   //el jugador ingreso bien la palabra
     mov r0, #0
@@ -131,14 +144,16 @@ gana:   //el jugador ingreso bien la palabra
     ldrne r0,=ptos2
     moveq r11, #1    //si esta jugando el jugador 1, que cambie
     movne r11, #0 //si esta jugando el jugador 2, que cambie
-    ldrb r0, [r0]
-    add r1, r0, #1
-//    strb r1, [r0]  // esto hay que arreglarlo porque tira un segmentation fault
-    mov r1, r0
+    ldr r1, [r0]
+    add r1, #1
+    strb r1, [r0]  // puntos <- puntos + 1
     ldr r0,=correcto
     bl printf
+    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
-    b ingreso
+    bne ingreso
+    mov pc, lr//si el contador es 0, que se termine el programa
+
 
 
 
