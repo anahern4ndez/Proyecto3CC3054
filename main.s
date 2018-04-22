@@ -20,7 +20,6 @@
 @@se definen las variables a usar
 N:
     .word   10
-
 welcome1:
     .asciz "******* JUGADOR 1  **************"
 entrada:
@@ -45,10 +44,16 @@ banco:
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
+<<<<<<< HEAD
     .asciz "a"
     .asciz " "
 prueba:
 	.asciz "%d"
+=======
+    .asciz " "
+prueba:
+	.asciz "%d"
+
 
 @@Empieza el programa
 .text
@@ -129,10 +134,11 @@ encontrar_palabra:
 
 pierde: @el jugador ingreso mal la letra
     cmp r11, #0
+
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-    moveq r11, #1    @si esta jugando el jugador 1, que cambie
-    movne r11, #0 @si esta jugando el jugador 2, que cambie
+    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
+    movne r11, #0 @@si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     cmp r1, #1
     subgt r1, #2
@@ -140,27 +146,28 @@ pierde: @el jugador ingreso mal la letra
     strb r1, [r0]  @ puntos <- puntos -2
     ldr r0,=error
     bl printf
-    subs r8, #1 @resta 1 a la cantidad de veces que se ha jugado
+    subs r8, #1 @@resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
-    bne ingreso @mientras no sea 0, que siga jugando
-    mov pc, lr @ si el contador es 0, que se termine el programa
+    bne ingreso @@mientras no sea 0, que siga jugando
+    mov pc, lr  @@ si el contador es 0, que se termine el programa
+    strb r1, [r0]  @@ puntos <- puntos -2
 
 gana:   @el jugador ingreso bien la palabra
     mov r0, #0
     cmp r11, #0
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-    moveq r11, #1    @si esta jugando el jugador 1, que cambie
-    movne r11, #0 @si esta jugando el jugador 2, que cambie
+    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
+    movne r11, #0 @2si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     add r1, #1
-    strb r1, [r0]  @ puntos <- puntos + 1
+    strb r1, [r0]  @@ puntos <- puntos + 1
     ldr r0,=correcto
     bl printf
     subs r8, #1 @resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
     bne ingreso
-    mov pc, lr @si el contador es 0, que se termine el programa
+    mov pc, lr @@si el contador es 0, que se termine el programa
 
 
 

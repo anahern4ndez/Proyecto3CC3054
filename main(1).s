@@ -1,4 +1,4 @@
-
+﻿
 
 /*
  Organizacion de Computadoras y Assembler
@@ -17,7 +17,7 @@
 
 .data
 .align 2
-//se definen las variables a usar
+@@se definen las variables a usar
 N:
     .word   10
 welcome1:
@@ -29,9 +29,9 @@ ingreso_dato:
 mal:
     .asciz "Ha ingresado mal algun caracter. Solo se puede del abecedario."
 
-ptos1: //puntos del jugador 1
+ptos1: @@puntos del jugador 1
     .word 0
-ptos2:  //puntos del jugador 2
+ptos2:  @@puntos del jugador 2
     .word 0
 welcome2:
     .asciz "******* JUGADOR 2  **************"
@@ -47,7 +47,7 @@ vocal:
     .asciz " "
 
 
-//Empieza el programa
+@@Empieza el programa
 .text
 .align 2
 
@@ -59,11 +59,11 @@ main:
     stmfd sp!,{lr}
     mov r11, #0
 
-    //Links a subrutinas
+    @@Links a subrutinas
 
     bl ingreso
 
-    //salida a SO
+    @@salida a SO
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
@@ -77,7 +77,7 @@ ingreso: /* ingreso de nombre */
     mov r10, #10 //prueba
     mov r9, #6
     mul r2,r9, r10
-    ldr r5,=banco //carga la primera posicion del banco de palabras
+    ldr r5,=banco @@carga la primera posicion del banco de palabras
     sub r5, #1
     add r5, r2
 
@@ -92,7 +92,7 @@ ingreso: /* ingreso de nombre */
     @ r7 contiene la direccion a la vocal que ingreso
     ldr r0,=entrada
     ldr r1,=vocal
-    bl scanf//leemos
+    bl scanf  @@leemos
 
     ldr r7,=vocal
     ldrb r1, [r7]
@@ -100,14 +100,14 @@ ingreso: /* ingreso de nombre */
     bl getchar
     bl encontrar_palabra
 
-    mov pc, lr //regreso al main
+    mov pc, lr @@regreso al main
 
 
 encontrar_palabra:
     ldr r0,=letras
     sub r0, #1
     add r0, #10
-//    mov r1, r0
+@@   mov r1, r0
     cmp r0, r1
     blne pierde
     bleq gana
@@ -115,7 +115,7 @@ encontrar_palabra:
     pop {lr}
 
 
-pierde: //el jugador ingreso mal la letra
+pierde: @@el jugador ingreso mal la letra
     ldr r0,=welcome1
     bl puts
     ldr r0,=error
@@ -123,7 +123,7 @@ pierde: //el jugador ingreso mal la letra
     bl printf
     pop {lr}
     mov pc, lr
-gana:   //el jugador ingreso bien la palabra
+gana:   @@el jugador ingreso bien la palabra
 
     mov r0, #0
     cmp r11, #0
