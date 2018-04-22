@@ -40,7 +40,7 @@ error:
 correcto:
     .asciz "¡BIEN! Puntos del jugador: %d \n"
 banco:
-    .asciz "_glu ","g_to ","h_ja ","v_ca ","c_sa ","h_gar","p_so ","am_r ","cl_se","c_na ","v_so ","p_lo ","m_no ","c_ja ","ans_a","ant_s","and_s","oje_r","p_lo ","ci_lo","fl_r ","arr_z","c_ta ","ac_so","ab_so","f_nal","ag_ja","l_na ","n_do ","árb_l","r_ma","r_íz ","ag_a ","f_ego","r_sa ","ag_do","gr_ve","_ire ","ran_ ","bich_","b_lsa"
+    .asciz "_glu ","g_to ","h_ja ","v_ca ","c_sa ","h_gar","p_so ","am_r ","cl_se","c_na ","v_so ","p_lo ","m_no ","c_ja ","ans_a","ant_s","and_s","oje_r","p_lo ","ci_lo","fl_r ","arr_z","c_ta ","ac_so","ab_so","f_nal","ag_ja","l_na ","n_do ","árb_l","r_ma ","r_íz ","ag_a ","f_ego","r_sa ","ag_do","gr_ve","_ire ","ran_ ","bich_","b_lsa"
 letras:
     .asciz "iaoaaoioauaeaeieeaeeooiouiuuooaauuouaaaoo"
 vocal:
@@ -117,6 +117,7 @@ ingreso: /* ingreso de nombre */
     ldrb r4, [r7]
     mov r2, r10
     bl getchar @@eliminar del buffer
+    push {lr}
     bl encontrar_palabra
 
     mov pc, lr @@regreso al main
@@ -129,6 +130,7 @@ encontrar_palabra:
     cmp r4, r9
     blne pierde
     bleq gana
+    pop {lr}
     mov pc, lr
 
 
