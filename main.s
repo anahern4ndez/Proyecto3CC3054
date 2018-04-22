@@ -44,13 +44,7 @@ banco:
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
-<<<<<<< HEAD
     .asciz "a"
-    .asciz " "
-prueba:
-	.asciz "%d"
-=======
-    .asciz " "
 prueba:
 	.asciz "%d"
 
