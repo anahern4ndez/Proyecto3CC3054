@@ -40,14 +40,15 @@ error:
 correcto:
     .asciz "¡BIEN! Puntos del jugador: %d \n"
 banco:
-    .asciz "_glu ","g_to ","p_rro ","v_ca ","c_sa ","h_gar ","b_lón ","am_r ","cl_se ","j_bón ","d_cha ","t_nis ","d_cha ","t_nis ","ans_a ","ant_s ","and_s","oje_r","p_lo ","p_ño ","ar_ma","arr_z","áng_l","ac_so","ab_so","f_nal","ag_ja","paj_r","n_do ","árb_l","r_ma","r_íz ","ag_a ","f_ego","r_sa ","ag_do","gr_ve","_ire ","ran_ ","bich_","b_lsa"
+    .asciz "_glu ","g_to ","h_ja ","v_ca ","c_sa ","h_gar","p_so ","am_r ","cl_se","c_na ","v_so ","p_lo ","m_no ","c_ja ","ans_a","ant_s","and_s","oje_r","p_lo ","ci_lo","fl_r ","arr_z","c_ta ","ac_so","ab_so","f_nal","ag_ja","l_na ","n_do ","árb_l","r_ma","r_íz ","ag_a ","f_ego","r_sa ","ag_do","gr_ve","_ire ","ran_ ","bich_","b_lsa"
 letras:
-    .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
+    .asciz "iaoaaoioauaeaeieeaeeooiouiuuooaauuouaaaoo"
 vocal:
     .asciz "a"
 random:
 	.word   0
-
+prueba:
+	.asciz "%d"
 
 @@Empieza el programa
 .text
@@ -73,7 +74,7 @@ main:
     mov r3,#0
     ldmfd sp!,{lr}
     bx lr
-
+        
 /* Inicio de subrutinas */
 ingreso: /* ingreso de nombre */
     cmp r11, #0
@@ -83,19 +84,18 @@ ingreso: /* ingreso de nombre */
     ldr r3,=random
     ldr r2, [r3]    @@entra como parametro, para asegurarse que no sea el mismo dos veces
     bl aleatorios
-    and r0,#6
-    
-    mov r1,r0
+    and r0,#0b11111
+	@@este me sirve para ver el numero
+   	mov r1,r0
+        @@este es para sumarle la posicion aqui y en letras
+ 	 mov r10,r0
     ldr r0,=prueba
     bl printf
 
-    mov r3,#10
-    mov r10,r3 @@prueba
     mov r9, #6
-    mul r2,r9, r10
+    mul r2,r9,r10
     ldr r5,=banco @@carga la primera posicion del banco de palabras
-    sub r5, #1
-    add r5, r2
+    add r5,r5,r2
 
     ldr r0,=ingreso_dato
     mov r1, r5
@@ -119,8 +119,7 @@ ingreso: /* ingreso de nombre */
 
 encontrar_palabra:
     ldr r0,=letras
-    sub r0, #1
-    add r0, #10
+    add r0, r10
     ldrb r9, [r0]
     cmp r4, r9
     blne pierde
@@ -155,7 +154,7 @@ gana:   @el jugador ingreso bien la palabra
     moveq r11, #1    @@si esta jugando el jugador 1, que cambie
     movne r11, #0 @2si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
-    add r1, #1
+    add r1, #5
     strb r1, [r0]  @@ puntos <- puntos + 1
     ldr r0,=correcto
     bl printf
