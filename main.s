@@ -1,4 +1,4 @@
-/*
+﻿/*
  Organizacion de Computadoras y Assembler
     Ana Lucia Hernandez 17138
     María Fernanda López 17160
@@ -16,13 +16,10 @@
 
 .data
 .align 2
-<<<<<<< HEAD
-//se definen las variables a usar
-=======
+
 @@se definen las variables a usar
 N:
     .word   10
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
 welcome1:
     .asciz "******* JUGADOR 1  **************"
 entrada:
@@ -47,13 +44,10 @@ banco:
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
-<<<<<<< HEAD
-    .asciz "a"
-=======
     .asciz " "
 prueba:
 	.asciz "%d"
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+
 
 
 @@Empieza el programa
@@ -77,13 +71,9 @@ main:
 
     @@Links a subrutinas
     bl ingreso
-<<<<<<< HEAD
-    //salida a SO
-    pop {lr}
-=======
 
     @@salida a SO
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
@@ -142,54 +132,53 @@ encontrar_palabra:
 
 pierde: @@el jugador ingreso mal la letra
     cmp r11, #0
-<<<<<<< HEAD
+
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-    moveq r11, #1    //si esta jugando el jugador 1, que cambie
-    movne r11, #0 //si esta jugando el jugador 2, que cambie
+    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
+    movne r11, #0 @@si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     cmp r1, #1
     subgt r1, #2
     movle r1, #0
-    strb r1, [r0]  // puntos <- puntos -2
-=======
+    strb r1, [r0]  @@ puntos <- puntos -2
+
     ldreq r1,=ptos1
     ldrne r1,=ptos2
     moveq r11, #1    @@si esta jugando el jugador 1, que cambie
     movne r11, #0 @@si esta jugando el jugador 2, que cambie
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
     ldr r0,=error
     bl printf
-    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
+    subs r8, #1 @@resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
-    bne ingreso //mientras no sea 0, que siga jugando
-    mov pc, lr // si el contador es 0, que se termine el programa
+    bne ingreso @@mientras no sea 0, que siga jugando
+    mov pc, lr @@ si el contador es 0, que se termine el programa
 
 gana:   @@el jugador ingreso bien la palabra
     mov r0, #0
     cmp r11, #0
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-<<<<<<< HEAD
-    moveq r11, #1    //si esta jugando el jugador 1, que cambie
-    movne r11, #0 //si esta jugando el jugador 2, que cambie
+
+    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
+    movne r11, #0 @@si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     add r1, #1
-    strb r1, [r0]  // puntos <- puntos + 1
-=======
+    strb r1, [r0]  @@ puntos <- puntos + 1
+
     moveq r11, #1    @@si esta jugando el jugador 1, que cambie
     movne r11, #0 @@si esta jugando el jugador 2, que cambie
     ldrb r0, [r0]
     add r1, r0, #1
 @@    strb r1, [r0]  @@ esto hay que arreglarlo porque tira un segmentation fault
     mov r1, r0
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+
     ldr r0,=correcto
     bl printf
-    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
+    subs r8, #1 @@resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
     bne ingreso
-    mov pc, lr//si el contador es 0, que se termine el programa
+    mov pc, lr	@@si el contador es 0, que se termine el programa
 
 
 
