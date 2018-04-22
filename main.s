@@ -16,13 +16,11 @@
 
 .data
 .align 2
-<<<<<<< HEAD
-//se definen las variables a usar
-=======
+
 @@se definen las variables a usar
 N:
     .word   10
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+
 welcome1:
     .asciz "******* JUGADOR 1  **************"
 entrada:
@@ -47,14 +45,10 @@ banco:
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
-<<<<<<< HEAD
     .asciz "a"
-=======
     .asciz " "
 prueba:
 	.asciz "%d"
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
-
 
 @@Empieza el programa
 .text
@@ -68,26 +62,19 @@ main:
     stmfd sp!,{lr}
     mov r11, #0
     mov r8, #5
-    ldr r0,=ptos1
-    ldr r2,=ptos2
-    str r11, [r0]
-    str r11, [r2]
     mov r2, #0
     mov r0, #0
 
-    @@Links a subrutinas
+    /* Links a subrutinas */
     bl ingreso
-<<<<<<< HEAD
-    //salida a SO
-    pop {lr}
-=======
 
-    @@salida a SO
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+    /* salida a SO */
+    pop {lr}
     mov r0,#0
     mov r3,#0
     ldmfd sp!,{lr}
     bx lr
+
 /* Inicio de subrutinas */
 ingreso: /* ingreso de nombre */
     cmp r11, #0
@@ -97,9 +84,9 @@ ingreso: /* ingreso de nombre */
     bl aleatorios
     and r0,#6
     
-   mov r1,r0
-   ldr r0,=prueba
-   bl printf
+    mov r1,r0
+    ldr r0,=prueba
+    bl printf
 
     mov r3,#10
     mov r10,r3 @@prueba
@@ -115,10 +102,10 @@ ingreso: /* ingreso de nombre */
 
     @ ingreso de datos
     @ r0 contiene formato de ingreso
-    @ r7 contiene la direccion a la vocal que ingreso
+    @ r1 contiene la direccion a la vocal que ingreso
     ldr r0,=entrada
     ldr r1,=vocal
-    bl scanf	@@leemos
+    bl scanf
 
     ldr r7,=vocal
     ldrb r4, [r7]
@@ -137,59 +124,43 @@ encontrar_palabra:
     cmp r4, r9
     blne pierde
     bleq gana
-    pop {lr}
+    mov pc, lr
 
 
-pierde: @@el jugador ingreso mal la letra
+pierde: @el jugador ingreso mal la letra
     cmp r11, #0
-<<<<<<< HEAD
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-    moveq r11, #1    //si esta jugando el jugador 1, que cambie
-    movne r11, #0 //si esta jugando el jugador 2, que cambie
+    moveq r11, #1    @si esta jugando el jugador 1, que cambie
+    movne r11, #0 @si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     cmp r1, #1
     subgt r1, #2
     movle r1, #0
-    strb r1, [r0]  // puntos <- puntos -2
-=======
-    ldreq r1,=ptos1
-    ldrne r1,=ptos2
-    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
-    movne r11, #0 @@si esta jugando el jugador 2, que cambie
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+    strb r1, [r0]  @ puntos <- puntos -2
     ldr r0,=error
     bl printf
-    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
+    subs r8, #1 @resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
-    bne ingreso //mientras no sea 0, que siga jugando
-    mov pc, lr // si el contador es 0, que se termine el programa
+    bne ingreso @mientras no sea 0, que siga jugando
+    mov pc, lr @ si el contador es 0, que se termine el programa
 
-gana:   @@el jugador ingreso bien la palabra
+gana:   @el jugador ingreso bien la palabra
     mov r0, #0
     cmp r11, #0
     ldreq r0,=ptos1
     ldrne r0,=ptos2
-<<<<<<< HEAD
-    moveq r11, #1    //si esta jugando el jugador 1, que cambie
-    movne r11, #0 //si esta jugando el jugador 2, que cambie
+    moveq r11, #1    @si esta jugando el jugador 1, que cambie
+    movne r11, #0 @si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     add r1, #1
-    strb r1, [r0]  // puntos <- puntos + 1
-=======
-    moveq r11, #1    @@si esta jugando el jugador 1, que cambie
-    movne r11, #0 @@si esta jugando el jugador 2, que cambie
-    ldrb r0, [r0]
-    add r1, r0, #1
-@@    strb r1, [r0]  @@ esto hay que arreglarlo porque tira un segmentation fault
-    mov r1, r0
->>>>>>> ec0dcdb0e6beca7a763c50caa1f804552bb017dd
+    strb r1, [r0]  @ puntos <- puntos + 1
     ldr r0,=correcto
     bl printf
-    subs r8, #1 //resta 1 a la cantidad de veces que se ha jugado
+    subs r8, #1 @resta 1 a la cantidad de veces que se ha jugado
     pop {lr}
     bne ingreso
-    mov pc, lr//si el contador es 0, que se termine el programa
+    mov pc, lr @si el contador es 0, que se termine el programa
 
 
 
