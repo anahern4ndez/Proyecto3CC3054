@@ -45,8 +45,8 @@ letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
     .asciz "a"
-prueba:
-	.asciz "%d"
+random:
+	.word   0
 
 
 @@Empieza el programa
@@ -80,6 +80,8 @@ ingreso: /* ingreso de nombre */
     ldreq r0,=welcome1
     ldrne r0,=welcome2
     bl puts
+    ldr r3,=random
+    ldr r2, [r3]    @@entra como parametro, para asegurarse que no sea el mismo dos veces
     bl aleatorios
     and r0,#6
     
