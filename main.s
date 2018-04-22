@@ -1,4 +1,3 @@
-﻿
 /*
  Organizacion de Computadoras y Assembler
     Ana Lucia Hernandez 17138
@@ -39,11 +38,13 @@ error:
 correcto:
     .asciz "¡BIEN! Puntos del jugador: %d \n"
 banco:
-    .asciz "_glu ","g_to ","p_rro ","v_ca ","c_sa ","h_gar ","b_lón ","am_r ","cl_se ","j_bón ","d_cha ","t_nis ","d_cha ","t_nis ","ans_a ","ant_s ","and_s ","oje_r ","p_lo ","p_ño ","ar_ma ","arr_z ","áng_l ","ac_so ","ab_so ","f_nal ","ag_ja ","paj_r ","n_do ","árb_l ","r_ma ","r_íz ","ag_a ","f_ego ","r_sa ","ag_do ","gr_ve ","_ire ","ran_ ","bich_ ","b_lsa "
+    .asciz "_glu ","g_to ","p_rro ","v_ca ","c_sa ","h_gar ","b_lón ","am_r ","cl_se ","j_bón ","d_cha ","t_nis ","d_cha ","t_nis ","ans_a ","ant_s ","and_s","oje_r","p_lo ","p_ño ","ar_ma","arr_z","áng_l","ac_so","ab_so","f_nal","ag_ja","paj_r","n_do ","árb_l","r_ma","r_íz ","ag_a ","f_ego","r_sa ","ag_do","gr_ve","_ire ","ran_ ","bich_","b_lsa"
 letras:
     .asciz "iaeaaoaoaaueueieeaeuooeauiuauoaauuouaaaoo"
 vocal:
     .asciz " "
+prueba:
+	.asciz "%d"
 
 
 @@Empieza el programa
@@ -66,15 +67,21 @@ main:
     mov r3,#0
     ldmfd sp!,{lr}
     bx lr
-
 /* Inicio de subrutinas */
 ingreso: /* ingreso de nombre */
     cmp r11, #0
     ldreq r0,=welcome1
     ldrne r0,=welcome2
     bl puts
+    bl aleatorios
+    and r0,#6
+    
+   mov r1,r0
+   ldr r0,=prueba
+   bl printf
 
-    mov r10, #10 @@prueba
+    mov r3,#10
+    mov r10,r3 @@prueba
     mov r9, #6
     mul r2,r9, r10
     ldr r5,=banco @@carga la primera posicion del banco de palabras
@@ -90,7 +97,7 @@ ingreso: /* ingreso de nombre */
     @ r7 contiene la direccion a la vocal que ingreso
     ldr r0,=entrada
     ldr r1,=vocal
-    bl scanf//leemos
+    bl scanf	@@leemos
 
     ldr r7,=vocal
     ldrb r4, [r7]
