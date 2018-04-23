@@ -1,42 +1,77 @@
-/******************************************************************************
-*	random.s
-*	 by Alex Chadwick
-*
-*	A sample assembly code implementation of the screen03 operating system.
-*	See main.s for details.
-*
-*	random.s contains code to do with generating pseudo random numbers.
-******************************************************************************/
+@----------------------------------
 
-/*
-* Random is a function with an input of the last number it generated, and an 
-* output of the next number in a pseduo random number sequence.
-* C++ Signature: u32 Random(u32 lastValue);
-*/
+.data
+
+@ See /usr/include/arm-linux-gnueabihf/asm/unistd.h
+@ See /usr/include/arm-linux-gnueabihf/bits/fcntl-linux.h
+
+    .equ create,     8
+         .equ Mode, 0644       @ -rw-r--r--
+    .equ open,       5
+         .equ Rd,   00
+         .equ Wr,   01
+         .equ RdWr, 02
+         .equ Apnd, 02000
+    .equ read,       3
+    .equ write,      4
+    .equ close,      6
+    .equ sync,       36
+    .equ exit,       1
+    .equ sfile,      187
+
+@----------------------------------
+
+.balign 4
+dir_file:
+    .asciz "/dev/urandom"
+
+.balign 4
+Open:
+    .word dir_file, RdWr | Apnd, open
+
+.balign 4
+Buf:
+    .word 0 
+
+.balign 4
+Read:
+    .word Buf, 1, read
+
+.balign 4
+format:
+    .asciz "%3d\n"
+
+@----------------------------------
+
 .text
-.align 2
-.global random
-random:
-	xnm .req r0
-	a .req r1
-	
-	mov a,#0xef00
-	mul a,xnm
-	add a,xnm
-	lsr	a,#3
-	add a,#924
-	mul a,xnm
-	sub a,xnm
-	mul a,xnm
-	add a,xnm
 
-    cmp a, #0
-    blt random
-    cmpgt a, #39
-    bgt random
+.global aleatorios
 
-	.unreq xnm
-	add r0,a,#73
-	
-	.unreq a
-	mov pc,lr
+aleatorios:
+
+@    push   {r4, r5, r7, lr}     folowing AAPCS
+
+     ldr    r3, =Open            @ load address
+     ldm    r3, {r0, r1, r7}     @ load registers
+     svc    #0                   @ OS opens file
+     mov    r4, r0               @ save fd in r4
+
+     ldr    r3, =Read            @ load address
+     ldm    r3, {r1, r2, r7}     @ load registers
+     svc    #0                   @ OS reads file
+
+     mov    r0, r4               @ move fd in r0
+     mov    r7, #close           @ num for close
+     svc    #0                   @ OS closes file
+
+@     ldr    r0, =format          adress of format
+       @ load byte
+@     bl     printf               @ C() print byte
+@     mov    r0, #0               @ 0 = success
+
+exit:
+
+@     pop    {r4, r5, r7, lr}     @ folowing AAPCS
+     ldr    r1, =Buf             @ addr of byte red
+     ldr    r0, [r1]      
+     mov    pc, lr                   @ Exit if use gcc as linker
