@@ -93,20 +93,19 @@ ingreso: /* ingreso de vocal */
     ldreq r0,=welcome1
     ldrne r0,=welcome2
     bl puts
-
+    /* se manda a llamar a la subrutina que genera numeros aletorios
+       esto servira para moverse entre las posiciones del vector de
+       palabras aleatoriamente*/
     push {lr}
     bl aleatorios
     pop {lr}
-    and r0,#0b11111 @@este me sirve para ver el numero
-   	mov r1,r0 @@este es para sumarle la posicion aqui y en letras
+    and r0,#0b11111 @@mascara para generar solo cierto rango de numeros
     push {lr}
-    mov r10,r0
+    mov r10,r0      @@se mueve el numero generado aleatoriamente a r10
     cmp r10, #30
     subeq r10, #9
     cmp r10, #31
     subeq r10, #9
-    ldr r0,=prueba
- //   bl printf
     pop {lr}
 
     mov r9, #6
@@ -120,9 +119,10 @@ ingreso: /* ingreso de vocal */
     bl printf
     pop {lr}
 
-    @ ingreso de datos
-    @ r0 contiene formato de ingreso
-    @ r1 contiene la direccion a la vocal que ingreso
+    /* ingreso de datos
+      r0 contiene formato de ingreso
+      r1 contiene la direccion a la vocal que ingreso
+    */
     push {lr}
     ldr r0,=entrada
     ldr r1,=vocal
@@ -190,13 +190,13 @@ pierde: @el jugador ingreso mal la letra
     pop {lr}    @regresa hacia donde fue llamado
     mov pc, lr  @@ si el contador es 0, que se termine el programa
 
-gana:   @el jugador ingreso bien la palabra
+gana:   /*el jugador ingreso bien la palabra*/
     mov r0, #0
     cmp r11, #0
     ldreq r0,=ptos1
     ldrne r0,=ptos2
     moveq r11, #1    @@si esta jugando el jugador 1, que cambie
-    movne r11, #0 @2si esta jugando el jugador 2, que cambie
+    movne r11, #0 @si esta jugando el jugador 2, que cambie
     ldr r1, [r0]
     add r1, #5
     strb r1, [r0]  @@ puntos <- puntos + 5
@@ -227,7 +227,7 @@ final: @@ El juego termina, se hace display a qué jugador ganó con su punteo o
     pop {lr}    @@regresa hacia donde fue llamado
     mov pc, lr
 
-mal_ingreso: @ programación defensiva
+mal_ingreso: /* subrutina que despliega mensaje de error en caso haya ingresado un caracter diferente a letra */
     push {lr}
     ldr r0,=mal /* mensaje de error*/
     bl puts
